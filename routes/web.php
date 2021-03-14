@@ -31,4 +31,4 @@ Route::prefix('admin')
             ->name('dashboard');
     });
 
-Auth::routes();
+Auth::routes(['verify' => true]);
