@@ -11,7 +11,7 @@ class TravelPackage extends Model
 
     protected $fillable = [
         'title', 'slug', 'location', 'featured_event',
-        'language', 'food', 'departure_date',
+        'language', 'foods', 'departure_date', 'about',
         'duration', 'type', 'price'
     ];
 
