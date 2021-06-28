@@ -6,7 +6,7 @@
 
         <!-- Page Heading -->
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Ubah Paket Travel {{ $item->title }}</h1>
+            <h1 class="h3 mb-0 text-gray-800">Edit Gallery {{ $item->title }}</h1>
         </div>
 
         @if ($errors->any())
@@ -21,48 +21,23 @@
 
         <div class="card shadow">
             <div class="card-body">
-                <form action="{{ route('gallery.update', $item->id) }}" method="POST">
+                <form action="{{ route('gallery.update', $item->id) }}" method="POST" enctype="multipart/form-data">
                     @method('PUT')
                     @csrf
                     <div class="form-group">
-                        <label for="title">Title</label>
-                        <input type="text" name="title" id="title" class="form-control" placeholder="Title" value="{{ $item->title }}">
+                        <label for="travel_packages_id">Paket Travel</label>
+                        <select name="travel_packages_id" required class="form-control" required>
+                            <option value="{{ $item->travel_packages_id }}">Jangan diubah</option>
+                            @foreach ($travel_packages as $travel_package)
+                                <option value="{{ $travel_package->id }}">
+                                    {{ $travel_package->title }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="location">Location</label>
-                        <input type="text" name="location" id="location" class="form-control" placeholder="Location" value="{{ $item->location }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="about">About</label>
-                        <textarea name="about" id="about" rows="10" class="d-block w-100 form-control">{{ $item->about }}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="featured_event">Featured Event</label>
-                        <input type="text" name="featured_event" id="featured_event" class="form-control" placeholder="Featured Event" value="{{ $item->featured_event }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="language">Language</label>
-                        <input type="text" name="language" id="language" class="form-control" placeholder="Language" value="{{ $item->language }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="foods">Foods</label>
-                        <input type="text" name="foods" id="foods" class="form-control" placeholder="Foods" value="{{ $item->foods }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="departure_date">Departure Date</label>
-                        <input type="date" name="departure_date" id="departure_date" class="form-control" placeholder="Departure Date" value="{{ $item->departure_date}}">
-                    </div>
-                    <div class="form-group">
-                        <label for="duration">Duration</label>
-                        <input type="text" name="duration" id="duration" class="form-control" placeholder="Duration" value="{{ $item->duration }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="type">Type</label>
-                        <input type="text" name="type" id="type" class="form-control" placeholder="Type" value="{{ $item->type }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="price">Price</label>
-                        <input type="number" name="price" id="price" class="form-control" placeholder="Price" value="{{ $item->price }}">
+                        <label for="image">Image</label>
+                        <input type="file" class="form-control" name="image" placeholder="Image">
                     </div>
                     <button type="submit" class="btn btn-primary btn-black">
                         Ubah
