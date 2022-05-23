@@ -1,3 +1,18 @@
+# Nomads
+Nomads is a web application for travel trip. Created with laravel framework.
+
+## Setup project
+```
+> composer install
+> composer update
+~ create database MySql
+~ setup .env file
+> php artisan key:generate
+> php artisan migrate
+~ fill user data in database
+> php artisan serve
+```
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
 <p align="center">
