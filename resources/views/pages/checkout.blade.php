@@ -34,7 +34,7 @@
                             @if ($errors->any())
                                 <div class="alert alert-danger">
                                     <ul>
-                                        @foreach ($error->all() as $error)
+                                        @foreach ($errors->all() as $error)
                                             <li>{{ $error }}</li>
                                         @endforeach
                                     </ul>
@@ -90,20 +90,27 @@
                             </div>
                             <div class="member mt-3">
                                 <h2>Add Member</h2>
-                                <form class="form-inline">
-                                    <label for="inputUsername" class="sr-only">Name</label>
-                                    <input name="inputUsername" type="text" class="form-control mb-2 mr-sm-2"
-                                        id="inputUsername" placeholder="Username">
+                                <form class="form-inline" action="{{ route('checkout-create', $item->id) }}" method="POST">
+                                    @csrf
+                                    <label for="username" class="sr-only">Name</label>
+                                    <input name="username" type="text" class="form-control mb-2 mr-sm-2"
+                                        id="username" placeholder="Username" required>
+
+                                    <label for="nationality" class="sr-only">Nationality</label>
+                                    <input name="nationality" type="text" class="form-control mb-2 mr-sm-2"
+                                        id="nationality" placeholder="Nationality" style="width: 50px" required>
+                                        
                                     <label for="inputVisa" class="sr-only">Visa</label>
-                                    <select name="inpusVisa" id="inputVisa" class="custom-select mb-2 mr-sm-2">
-                                        <option value="VISA" selected>VISA</option>
-                                        <option value="30 Days">30 Days</option>
-                                        <option value="N/A">N/A</option>
+                                    <select name="is_visa" id="is_visa" class="custom-select mb-2 mr-sm-2" required>
+                                        <option value="" selected>VISA</option>
+                                        <option value="1">30 Days</option>
+                                        <option value="0">N/A</option>
                                     </select>
-                                    <label for="doePassport" class="sr-only">DOE Passport</label>
+
+                                    <label for="doe_passport" class="sr-only">DOE Passport</label>
                                     <div class="input-group mb-2 mr-sm-2">
                                         <input type="text" class="form-control datepicker" id="doePassport"
-                                            placeholder="DOE Passport">
+                                            placeholder="DOE Passport" name="doe_passport">
                                     </div>
 
                                     <button type="submit" class="btn btn-add-now mb-2 px-4">Add Now</button>
@@ -198,14 +205,8 @@
 <script src="{{ url('frontend/libraries/gijgo/js/gijgo.min.js') }}"></script>
 <script>
     $(document).ready(function () {
-        $('.xzoom, .xzoom-gallery').xzoom({
-            zoomWidth: 500,
-            title: false,
-            tint: '#333',
-            xoffset: 15
-        });
-
         $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
             uiLibrary: 'bootstrap4',
             icons: {
                 rightIcon: '<img src="{{ url('frontend/images/icon/ic_doe.png') }}"/>'

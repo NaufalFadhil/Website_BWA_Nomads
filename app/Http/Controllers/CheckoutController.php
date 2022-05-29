@@ -44,6 +44,32 @@ class CheckoutController extends Controller
         return redirect()->route('checkout', $transaction->id);
     }
 
+    public function create(Request $request, $id) 
+    {
+        $request->validate([
+            'username' => 'required|string|exists:users,username',
+            'is_visa' => 'required|boolean',
+            'doe_passport' => 'required'
+        ]);
+
+        $data = $request->all();
+        $data['transactions_id'] = $id;
+
+        TransactionDetail::create($data);
+
+        $transaction = Transaction::with(['travel_package'])->find($id);
+
+        if ($request->is_visa) {
+            $transaction->transaction_total += 190;
+            $transaction->additional_visa += 190;
+        }
+
+        $transaction->transaction_total += $transaction->travel_package->price;
+        $transaction->save();
+
+        return redirect()->route('checkout', $id);
+    }
+
     public function success(Request $request)
     {
         return view('pages.success');
