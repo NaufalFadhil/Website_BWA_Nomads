@@ -31,8 +31,17 @@
                 <div class="row">
                     <div class="col-lg-8 pl-lg-0">
                         <div class="card card-details">
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($error->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                             <h1>Who is going?</h1>
-                            <p>Trip to Ubud, Bali, Indonesia</p>
+                            <p>Trip to {{ $item->travel_package->title }}, {{ $item->travel_package->location }}</p>
                             <div class="attendee">
                                 <table class="table table-responsive-sm text-center">
                                     <thead>
@@ -46,50 +55,36 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <img src="{{ url('frontend/images/avatar/avatar-1.png') }}" height="60" alt="avatar">
-                                            </td>
-                                            <td class="align-middle">
-                                                Angga Risky
-                                            </td>
-                                            <td class="align-middle">
-                                                CN
-                                            </td>
-                                            <td class="align-middle">
-                                                N/A
-                                            </td>
-                                            <td class="align-middle">
-                                                Active
-                                            </td>
-                                            <td class="align-middle">
-                                                <a href="#">
-                                                    <img src="{{ url('frontend/images/icon/ic_remove.png') }}" alt="Icon Remove">
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <img src="{{ url('frontend/images/avatar/avatar-2.png') }}" height="60" alt="avatar">
-                                            </td>
-                                            <td class="align-middle">
-                                                Galih Pratama
-                                            </td>
-                                            <td class="align-middle">
-                                                SG
-                                            </td>
-                                            <td class="align-middle">
-                                                30 Days
-                                            </td>
-                                            <td class="align-middle">
-                                                Active
-                                            </td>
-                                            <td class="align-middle">
-                                                <a href="#">
-                                                    <img src="{{ url('frontend/images/icon/ic_remove.png') }}" alt="Icon Remove">
-                                                </a>
-                                            </td>
-                                        </tr>
+                                        @forelse ($item->details as $detail)
+                                            <tr>
+                                                <td>
+                                                    <img src="https://ui-avatars.com/api/?name={{ $detail->username }}" height="40" alt="avatar" class="rounded-circle">
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ $detail->username }}
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ $detail->nationality }}
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ $detail->is_visa ? '30 Days' : 'N/A' }}
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ \carbon\Carbon::createFromDate($detail->doe_passport) > \Carbon\Carbon::now() ? 'Active' : 'Inactive' }}
+                                                </td>
+                                                <td class="align-middle">
+                                                    <a href="{{ route('checkout-remove', $detail->id) }}">
+                                                        <img src="{{ url('frontend/images/icon/ic_remove.png') }}" alt="Icon Remove">
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="6" class="text-center">
+                                                    No Visitor
+                                                </td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
@@ -126,24 +121,24 @@
                             <table class="trip-information">
                                 <tr>
                                     <th width="50%">Members</th>
-                                    <td width="50%" class="text-right">2 person</td>
+                                    <td width="50%" class="text-right">{{ $item->details->count() }} person</td>
                                 </tr>
                                 <tr>
                                     <th width="50%">Additional VISA</th>
-                                    <td width="50%" class="text-right">$ 190,00</td>
+                                    <td width="50%" class="text-right">$ {{ $item->additional_visa }},00</td>
                                 </tr>
                                 <tr>
                                     <th width="50%">Trip Price</th>
-                                    <td width="50%" class="text-right">$ 80,00 / person</td>
+                                    <td width="50%" class="text-right">$ {{ $item->transaction_total }},00 / person</td>
                                 </tr>
                                 <tr>
                                     <th width="50%">Sub Total</th>
-                                    <td width="50%" class="text-right">$ 280,00</td>
+                                    <td width="50%" class="text-right">$ {{ $item->transaction_total }},00</td>
                                 </tr>
                                 <tr>
                                     <th width="50%">Total (+Unique Code)</th>
                                     <td width="50%" class="text-right">
-                                        <span class="text-blue">$ 80</span><span class="text-orange">,33</span></td>
+                                        <span class="text-blue">$ {{ $item->transaction_total }},</span><span class="text-orange">{{ mt_rand(0,99) }}</span></td>
                                 </tr>
                             </table>
                             <hr>
@@ -177,12 +172,12 @@
                             </div>
                         </div>
                         <div class="join-container">
-                            <a href="{{ route('checkout-success') }}" class="btn btn-block btn-join-now mt-3 py-2">
+                            <a href="{{ route('checkout-success', $item->id) }}" class="btn btn-block btn-join-now mt-3 py-2">
                                 i Have Made Payment
                             </a>
                         </div>
                         <div class="text-center mt-3">
-                            <a href="{{ route('detail') }}" class="text-muted">
+                            <a href="{{ route('detail', $item->travel_package->slug) }}" class="text-muted">
                                 Cancel Booking
                             </a>
                         </div>
