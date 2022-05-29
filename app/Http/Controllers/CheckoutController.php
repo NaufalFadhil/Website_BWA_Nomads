@@ -74,4 +74,23 @@ class CheckoutController extends Controller
     {
         return view('pages.success');
     }
+
+    public function remove(Request $request, $id)
+    {
+        $item = TransactionDetail::findOrFail($id);
+
+        $transaction = Transaction::with(['details','travel_package'])
+                            ->findOrFail($item->transactions_id);
+
+        if ($item->is_visa) {
+            $transaction->transaction_total -= 190;
+            $transaction->additional_visa -= 190;
+        }
+
+        $transaction->transaction_total -= $transaction->travel_package->price;
+        $transaction->save();
+        $item->delete();
+
+        return redirect()->route('checkout', $item->transactions_id);
+    }
 }
