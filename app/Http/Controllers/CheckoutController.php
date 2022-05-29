@@ -70,8 +70,12 @@ class CheckoutController extends Controller
         return redirect()->route('checkout', $id);
     }
 
-    public function success(Request $request)
+    public function success(Request $request, $id)
     {
+        $transaction = Transaction::findOrFail($id);
+        $transaction->transaction_status = 'PENDING';
+        $transaction->save();
+        
         return view('pages.success');
     }
 
